@@ -45,7 +45,7 @@ function initialize (url) {
     // child.loadURL(`file://${}/index.html`);
     mainWindow.show();
 
-    // mainWindow.loadURL(`http://vuc.cn:8889`);
+    // mainWindow.loadURL(`http://localhost:8889`);
     mainWindow.loadURL(url);
     mainWindow.on('closed', () => {
       mainWindow = null
