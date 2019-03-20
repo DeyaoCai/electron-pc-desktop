@@ -1,5 +1,8 @@
 const fs = require("fs");
-const getType= item => {return Object.prototype.toString.call(item).slice(8,-1);}
+const path = require("path");
+const getType = item => {
+  return Object.prototype.toString.call(item).slice(8, -1);
+};
 getType.isNumber = item => getType(item) === "Number";
 getType.isString = item => getType(item) === "String";
 getType.isArray = item => getType(item) === "Array";
@@ -7,19 +10,21 @@ getType.isObject = item => getType(item) === "Object";
 getType.isBoolean = item => getType(item) === "Boolean";
 getType.isNull = item => getType(item) === "Null";
 getType.isUndefined = item => getType(item) === "Undefined";
-getType.isFunction = item =>getType(item) === "Function";
-getType.isDate = item =>getType(item) === "Date";
+getType.isFunction = item => getType(item) === "Function";
+getType.isDate = item => getType(item) === "Date";
 
-function _reatdDir(path, reg, result) { // path 读取的目录， reg 文件匹配的正则， result 为结果集
-  const pathes = fs.readdirSync(path);
+function _reatdDir(oriPath, reg, result) { // path 读取的目录， reg 文件匹配的正则， result 为结果集
+  const pathes = fs.readdirSync(oriPath);
   const fileReg = /\./;
   pathes.forEach(item => {
     if (fileReg.test(item)) { // 判断是否为文件
-      if (reg.test(item)) {result.push({ // 判断是否为指定文件
-        path: path + "/" + item, // 路径
-        name: item.replace(reg, ""), // 文件名
-      });}
-    } else _reatdDir(path + "/" + item, reg, result); // 文件夹的话 就往下读取
+      if (reg.test(item)) {
+        result.push({ // 判断是否为指定文件
+          path: oriPath + "/" + item, // 路径
+          name: item.replace(reg, ""), // 文件名
+        });
+      }
+    } else _reatdDir(oriPath + "/" + item, reg, result); // 文件夹的话 就往下读取
   })
 }
 
@@ -29,35 +34,39 @@ function reatdDrir(path, reg) { // path 读取的目录， reg 文件匹配的�
   return result;
 }
 
-function writeExportFile(conf){
+function writeExportFile(conf) {
   let inputPath = [];
   if (getType.isString(conf.inputPath)) inputPath = [conf.inputPath];
   else if (getType.isArray(conf.inputPath)) inputPath = conf.inputPath;
   else return;
 
-  const result = Array.prototype.concat.apply([],inputPath.map(item => reatdDrir(item, conf.fileReg)));
-  let importList,exportList;
-  if (conf.exportMode === "node"){
-    importList = result.map(item => `const ${item.name} = require("${item.path.replace(conf.importReg,conf.exportReg)}");`).join("\n");
+  const result = Array.prototype.concat.apply([], inputPath.map(item => reatdDrir(item, conf.fileReg)));
+  let importList, exportList;
+  if (conf.exportMode === "node") {
+    importList = result.map(item => `const ${item.name} = require("${item.path.replace(conf.importReg, conf.exportReg)}");`).join("\n");
     exportList = `\n\nmodule.exports = {${result.map(item => "\n  " + item.name + "").join(",")}\n};`;
-  }else if (conf.exportMode === "es6"){
-    importList=result.map(item=>`import ${item.name} from "${item.path.replace(conf.importReg,conf.exportReg)}"`).join("\n");
-    exportList=`\n\nexport default {\n  ${result.map(item=>conf.exportFn ? conf.exportFn(item) : item.name).join(",\n  ")}\n}`
-  }else if(conf.exportMode === "vueView"){
-    importList = `export default [\n  `+result.map(item => `{path: '/${conf.bizType}/${item.name}',name: '${item.name}',component(resolve) {require(['${item.path.replace(conf.importReg,conf.exportReg)}'], resolve)}}`).join(",\n  ");
+  } else if (conf.exportMode === "es6") {
+    importList = result.map(item => `import ${item.name} from "${item.path.replace(conf.importReg, conf.exportReg)}"`).join("\n");
+    exportList = `\n\nexport default {\n  ${result.map(item => conf.exportFn ? conf.exportFn(item) : item.name).join(",\n  ")}\n}`
+  } else if (conf.exportMode === "vueView") {
+    importList = `export default [\n  ` + result.map(item => `{path: '/${conf.bizType}/${item.name}',name: '${item.name}',component(resolve) {require(['${item.path.replace(conf.importReg, conf.exportReg)}'], resolve)}}`).join(",\n  ");
     exportList = "\n]";
   }
   fs.writeFileSync(conf.outputPath, importList + exportList);
   console.log(conf.succMsg);
 }
 
-function getFilleName (path){return path.split(/\//g).pop().replace(/\..+/, "")};
+function getFilleName(path) {
+  return path.split(/\//g).pop().replace(/\..+/, "")
+};
 
-function toCamel (str){ return str[0].toUpperCase() + str.slice(1)};
+function toCamel(str) {
+  return str[0].toUpperCase() + str.slice(1)
+};
 const getModule = {
   maps: {},
   init(obj) {
-    Object.keys(obj).forEach(item=>{
+    Object.keys(obj).forEach(item => {
       const paths = reatdDrir(obj[item], /.js$/);
       this.maps[item] || (this.maps[item] = {});
 
@@ -65,13 +74,14 @@ const getModule = {
         const realPath = this.maps[item][path];
         return realPath ? require(realPath) : null;
       };
-      paths.forEach(path => this.maps[item][path.name] = path.path);
+      paths.forEach(path => (this.maps[item][path.name] = path.path));
     })
   }
 };
+
 getModule.init({
-  unit: "./src/units",
-  tool: "./src/tools",
+  unit: path.join(__dirname, `./src/units`),
+  tool: path.join(__dirname, `./src/tools`),
 });
 
 module.exports = {

@@ -1,6 +1,6 @@
 const path = require('path')
 const cprocess = require("child_process");
-cprocess.exec("node app.js"); // 开代理服务器
+cprocess.exec(`node ${path.join(__dirname, `./app.js`)}`); // 开代理服务器
 
 const {
   app,

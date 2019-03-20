@@ -1,4 +1,6 @@
 const path = require('path');
+// const getThirdModule = require(path.join(__dirname, `./src/tools/getThirdModule.js`));
+// const express = getThirdModule('express');
 const express = require('express');
 const bodyParser = require('body-parser');
 
