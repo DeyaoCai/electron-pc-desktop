@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="./style/index.css">
+  <link rel="stylesheet" href="./style/frame.css">
+</head>
+<body >
+<div class="wrap">
+  <audio id="audio" autoplay preload="auto"></audio>
+  <div class="reload">刷新</div>
+</div>
+  <script>
+    require("./appExpress.js");
+
+    setTimeout(()=>{
+      fetch(`http://localhost:9898/randomUser`, {method: 'POST', headers: {
+          "Content-Type": "application/json"
+        },body: JSON.stringify({
+          firstParam: 'yourValue',
+          secondParam: 'secondValue',
+        })}).then(res=> console.log(res.json()))
+    },1000)
+    window.shortCut = require("./src/tools/shortCut.js")();
+    shortCut.init();
+    shortCut.alt(123,function(){
+      ipcRenderer.send('openDevTools');
+    });
+
+    window.baseTools = require("./baseTools.js");
+
+    const fs= require("fs");
+    const electron = require('electron');
+    const {ipcRenderer} = electron;
+    const {createRender,timeout} = require("./src/tools/CreateRender.js");
+
+    const tempB = createRender(require("./src/units/desktopDot.js"));
+    const tempImg = createRender(require("./src/units/desktopImg.js"));
+    let prevImg = null;
+    let imges;
+    let currentImgSrc;
+    try {
+      imges = fs.readdirSync("./img");
+      currentImgSrc = imges[0];
+      if (currentImgSrc) {
+        timeout(function () {
+          imges.push(imges.shift())
+          currentImgSrc = imges[0];
+          tempImg(document.querySelector("body"));
+        },3000)();
+
+        timeout(function () {
+          tempB(document.querySelector("body"))
+        },150)();
+      }
+    } catch (e) {
+      alert("请执行 npm run ht 来爬取背景图片！");
+    }
+
+
+    const tempPop = createRender(require("./src/units/popup.js"));
+    const tempCTip= createRender(require("./src/units/cTip.js"));
+    timeout(function () {
+      const time = new Date().getHours();
+      if (time >=  22) {
+        tempPop(document.querySelector(".wrap"), {slot: tempCTip,data: {content: "警告", title: "您需要休息了！"}, delay: 1000});
+      }
+    },5000)();
+    createRender(require("./src/units/search.js"))(document.querySelector("body"));
+
+    document.querySelector(".reload").onclick=function(){
+      window.location.reload();
+    }
+
+    require("./src/router/router.js");
+
+    const dataSearchMusic = require("./src/units/searchMusic.js");
+    const tempSearchMusic = createRender(dataSearchMusic);
+    tempSearchMusic(document.querySelector("body"));
+
+    const dataCmd = require("./src/units/cmd.js");
+    const tempCmd = createRender(dataCmd);
+    tempCmd(document.querySelector("body"));
+
+  </script>
+  <style>
+  </style>
+</body>
+</html>

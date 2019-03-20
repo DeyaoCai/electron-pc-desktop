@@ -1,0 +1,31 @@
+{
+  "name": "desktopapp",
+  "version": "2018.11.01-20-29-16",
+  "description": "",
+  "main": "main.js",
+  "scripts": {
+    "addversionToDev": "node ./read/addVersion.js --todev",
+    "addversion": "node ./read/addVersion.js",
+    "start": "electron .",
+    "express": "node ./appExpress.js",
+    "ht": "node ./proxy/ht.js",
+    "proxy": "node app.js",
+    "install": "npm install",
+    "pack": "electron-packager . app --win --out presenterTool --arch=x64 --app-version 1.0.0 --electron-version 3.0.5 --overwrite --ignore=node_modules",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "apicache": "^1.2.3",
+    "cheerio": "^1.0.0-rc.2",
+    "express": "^4.16.4",
+    "multer": "^1.0.5",
+    "mysql": "^2.16.0",
+    "request": "^2.88.0"
+  },
+  "devDependencies": {
+    "electron": "^3.0.6"
+  },
+  "__npminstall_done": false
+}
