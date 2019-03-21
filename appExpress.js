@@ -14,6 +14,13 @@ const connection = mysql.createConnection({
 });
 
 const app = express();
+app.use(function setHttpOptions(req, res, next) {
+  req.ctoolsOpt = {
+    devToolsDir: path.join(__dirname, '../../')
+  };
+  next();
+});
+
 
 // 跨域中间件
 app.use(function crosHeaders(req, res, next) {

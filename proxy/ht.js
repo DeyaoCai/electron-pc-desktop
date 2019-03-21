@@ -38,7 +38,7 @@ function mkdir(dirpath, dirname) {
     }
   }
 }
-
+console.log(__dirname)
 mkdir(path.join(__dirname, "../img"));
 startLoad('http://www.netbian.com/', ret => {
   fs.writeFileSync(path.join(__dirname, "./list.json"), JSON.stringify(ret));
@@ -125,7 +125,7 @@ function loadSubPage(list) {
   if (!now) return;
   const names = now.src.split("/");
   const name = names[names.length - 1].split(".")[0];
-  const pathes = fs.readdirSync(path.join(__dirname, "./img/")).map(item => item.split(".")[0]);
+  const pathes = fs.readdirSync(path.join(__dirname, "../img/")).map(item => item.split(".")[0]);
   if (pathes.some(item => item === name)) return loadSubPage(list);
   http.get(now.src, (res) => {
     const {statusCode} = res;

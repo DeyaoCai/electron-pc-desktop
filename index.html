@@ -15,12 +15,16 @@
     require(path.join(__dirname, "./appExpress.js"));
 
     setTimeout(()=>{
-      fetch(`http://localhost:9898/randomUser`, {method: 'POST', headers: {
+      // fetch(`http://localhost:9898/dev-tool/testGet`, {method: 'PSOT', headers: {
+      //     "Content-Type": "application/json"
+      //   },body: JSON.stringify({
+      //     firstParam: 'yourValue',
+      //     secondParam: 'secondValue',
+      //   })}).then(res=> console.log(res.json()))
+
+      fetch(`http://localhost:9898/dev-tool/ctoolsConf`, {method: 'GET', headers: {
           "Content-Type": "application/json"
-        },body: JSON.stringify({
-          firstParam: 'yourValue',
-          secondParam: 'secondValue',
-        })}).then(res=> console.log(res.json()))
+        }}).then(res=> console.log(res.json()))
     },1000);
     window.shortCut = require(path.join(__dirname, "./src/tools/shortCut.js"))();
     shortCut.init();
