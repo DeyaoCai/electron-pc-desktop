@@ -27,7 +27,7 @@ app.use(function crosHeaders(req, res, next) {
   res.header({
     'Access-Control-Allow-Credentials': true,
     'Access-Control-Allow-Origin': req.headers.origin || '*',
-    'Access-Control-Allow-Headers': 'X-Requested-With',
+    'Access-Control-Allow-Headers': 'X-Requested-With, content-type',
     'Access-Control-Allow-Methods': 'PUT,POST,GET,DELETE,OPTIONS',
     'Content-Type': 'application/json; charset=utf-8'
   });

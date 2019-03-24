@@ -22,9 +22,9 @@
       //     secondParam: 'secondValue',
       //   })}).then(res=> console.log(res.json()))
 
-      fetch(`http://localhost:9898/dev-tool/ctoolsConf`, {method: 'GET', headers: {
-          "Content-Type": "application/json"
-        }}).then(res=> console.log(res.json()))
+      // fetch(`http://localhost:9898/dev-tool/ctoolsConf`, {method: 'GET', headers: {
+      //     "Content-Type": "application/json"
+      //   }}).then(res=> console.log(res.json()))
     },1000);
     window.shortCut = require(path.join(__dirname, "./src/tools/shortCut.js"))();
     shortCut.init();
