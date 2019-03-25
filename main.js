@@ -1,7 +1,7 @@
 const path = require('path')
 const cprocess = require("child_process");
 cprocess.exec(`node ${path.join(__dirname, `./app.js`)}`); // 开代理服务器
-
+// require(path.join(__dirname, "../proxy/appExpress.js"));
 const {
   app,
   BrowserWindow,
@@ -47,6 +47,7 @@ function initialize (url) {
 
     // mainWindow.loadURL(`http://localhost:8889`);
     mainWindow.loadURL(url);
+    // mainWindow.loadURL(`http://localhost:9898`);
     mainWindow.on('closed', () => {
       mainWindow = null
     })

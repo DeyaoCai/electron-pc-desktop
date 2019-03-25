@@ -24,6 +24,8 @@ b{
   background-size: 1920px 1080px;
   border-radius: 2px;
   z-index: 2;
+  color: pink;
+  text-align: center;
 }
 img{
   width: 100%;
